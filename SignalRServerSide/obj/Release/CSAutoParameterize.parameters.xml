@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection 應用程式在 web.config 中用來存取資料庫的連接字串。" defaultValue="Data Source=(LocalDb)\v11.0;Initial Catalog=aspnet-SignalRServerSide-20131111153516;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\aspnet-SignalRServerSide-20131111153516.mdf" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\USER\\documents\\visual\ studio\ 2012\\Projects\\SignalRServerSide\\SignalRServerSide\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

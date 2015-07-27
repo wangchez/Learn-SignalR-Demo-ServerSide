@@ -1,0 +1,33 @@
+﻿<div id="well-lg">
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-user">
+                        <span data-bind="text: connect_count"></span>
+                    </span>
+                </span>
+                <input id="message" type="text" class="form-control">
+                <span class="input-group-btn">
+                    <button id="send_all" class="btn btn-primary" type="button">SendAll</button>
+                    <button id="send_caller" class="btn btn-danger" type="button">SendCaller</button>
+                    <button id="send_others" class="btn btn-success" type="button">SendOthers</button>
+                    <button id="send_group" class="btn btn-info" type="button">SendGroup</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <ul class="list-group" data-bind="foreach: history_stack">
+                <li class="list-group-item">
+                    <span class="label label-danger" data-bind="text: client_name"></span>
+                    <span data-bind="text: say_what"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/centerhubs.js" type="text/javascript"></script>
+}
