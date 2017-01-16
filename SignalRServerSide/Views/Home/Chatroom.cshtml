@@ -9,11 +9,13 @@
                 </span>
                 <input id="message" type="text" class="form-control">
                 <span class="input-group-btn">
-                    <button id="send_all" class="btn btn-primary" type="button" data-bind="enable: close_flag">SendAll</button>
-                    <button id="send_caller" class="btn btn-danger" type="button" data-bind="enable: close_flag">SendCaller</button>
-                    <button id="send_others" class="btn btn-success" type="button" data-bind="enable: close_flag">SendOthers</button>
-                    <button id="send_group" class="btn btn-info" type="button" data-bind="enable: close_flag">SendGroup</button>
-                     <button id="close_chat" class="btn btn-warn" type="button" data-bind="enable: close_flag">CloseChat</button>
+                    <button id="send_all" class="btn btn-primary" type="button" data-bind="enable: close_flag, click: callToServer.bind($data, 1)">SendAll</button>
+                    <button id="send_caller" class="btn btn-danger" type="button" data-bind="enable: close_flag, click: callToServer.bind($data, 2)">SendCaller</button>
+                    <button id="send_client" class="btn btn-danger" type="button" data-bind="enable: close_flag, click: callToServer.bind($data, 3)">SendClient</button>
+                    <button id="send_user" class="btn btn-danger" type="button" data-bind="enable: close_flag, click: callToServer.bind($data, 4)">SendUser</button>
+                    <button id="send_others" class="btn btn-success" type="button" data-bind="enable: close_flag, click: callToServer.bind($data, 5)">SendOthers</button>
+                    <button id="send_group" class="btn btn-info" type="button" data-bind="enable: close_flag, click: callToServer.bind($data, 6)">SendGroup</button>
+                    <button id="close_chat" class="btn btn-warn" type="button" data-bind="enable: close_flag">CloseChat</button>
                 </span>
             </div>
         </div>

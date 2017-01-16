@@ -23,8 +23,6 @@ namespace SignalRServerSide
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/signalr").Include("~/Scripts/jquery.signalR-2.0.0.js"));
-
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include("~/Scripts/knockout-2.2.0.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrapjs").Include("~/Scripts/bootstrap.js"));

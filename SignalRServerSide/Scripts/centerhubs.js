@@ -1,4 +1,4 @@
-﻿function clientModel(name, msg) {
+﻿function messageModel(name, msg) {
     this.client_name = ko.observable(name);
     this.say_what = ko.observable(msg);
 }
@@ -11,76 +11,95 @@ var messageModels = {
 
 ko.applyBindings(messageModels);
 
-var chat;
+var chatProxy;
 $(function () {
     // Declare a proxy to reference the hub. 
     //$.connection.hub.url = "/customURL";
-    chat = $.connection.HubCenter;   
-    chat.logging = true;
+    //$.connection.hub.qs = { 'version': '1.0' };
+    //$.connection.hub.logging = true;
+    chatProxy = $.connection.HubCenter;   
+    chatProxy.logging = true;
 
     // Create a function that the hub can call to broadcast messages.
-    chat.client.broadcastMessage = function (name, message) {
-        messageModels.history_stack.push(new clientModel(name, message));
+    chatProxy.client.newMessage = function (name, message) {
+        messageModels.history_stack.push(new messageModel(name, message));
     };
 
-    chat.client.updateConnectCount = function (count) {
+    chatProxy.client.updateConnectCount = function (count) {
         messageModels.connect_count(count);
     }
 
-    chat.client.closeChat = function (groupName) {
+    chatProxy.client.closeChat = function (groupName) {
         if (groupName == messageModels.current_client())
-        messageModels.close_flag(false);
+            messageModels.close_flag(false);
     }
 
-    chat.client.showLogInfo = function (info) {
+    chatProxy.client.showLogInfo = function (info) {
         alert("client id:" + info.ClientId + ", " + info.LogMessage);
     }
 
-    //without generate proxy
-    //connection = $.hubConnection("/customURL", { useDefaultPath: false });
-    //connection = $.hubConnection();
-    //hubProxy = connection.createHubProxy('HubCenter');
+    //Alternate way to define method on client (with the generated proxy)
+    //$.extend(chatProxy.client, {
+    //    newMessage: function(name, message) {
+    //        messageModels.history_stack.push(new clientModel(name, message));
+    //    }
+    //});
 
-    //hubProxy.on('broadcastMessage', function (name, message) {
+    //without generate proxy
+    //var connection = $.hubConnection("/customURL", { useDefaultPath: false });
+    //var connection = $.hubConnection() equal to $.connection.hub;
+    //connection.qs = { 'version' : '1.0' };
+    //chatProxy = connection.createHubProxy('HubCenter');
+
+    //chatProxy.on('newMessage', function (name, message) {
     //    messageModels.history_stack.push(new clientModel(name, message));
     //});
 
     messageModels.current_client(prompt('Enter your name:', ''));
+    chatProxy.state.name = messageModels.current_client();
+    //without generate proxy
+    //connection.start().done(function(){}).fail(function(){});
 
     //{ transport: 'longPolling' }
     $.connection.hub.start().done(function () {
-        chat.server.joinGroup(messageModels.current_client());
-        chat.server.getLogInfo({ ClientId: chat.connection.id, LogMessage: "I am coming." });
 
-        $('#send_all').click(function () {
-            callToServer(1);
-        });
-        $('#send_caller').click(function () {
-            callToServer(2);
-        });
-        $('#send_others').click(function () {
-            callToServer(3);
-        });
-        $('#send_group').click(function () {
-            callToServer(4);
-        });
+        console.log("Connected, transport = " + $.connection.hub.transport.name);
+
+        chatProxy.server.joinGroup();
+        chatProxy.server.sendLogInfo({ ClientId: chatProxy.connection.id, LogMessage: "I am coming." });
+
+        //without generate proxy
+        //chatProxy.invoke('sendLogInfo', { ClientId: chatProxy.connection.id, LogMessage: "I am coming." });
+
+        //$('#send_all').click(function () {
+        //    callToServer(1);
+        //});
+        //$('#send_caller').click(function () {
+        //    callToServer(2);
+        //});
+        //$('#send_others').click(function () {
+        //    callToServer(3);
+        //});
+        //$('#send_group').click(function () {
+        //    callToServer(4);
+        //});
     });
 });
 
 $('#close_chat').click(function () {
     messageModels.close_flag(false);
-    chat.server.closeFlagTrigger(messageModels.current_client());
+    chatProxy.server.triggerClosedFlag(messageModels.current_client());
 });
 
 function callToServer(type) {
     $('#message').focus();
 
     // Call the Send method on the hub. 
-    chat.server.SendMessage(messageModels.current_client(), $('#message').val(), type);
-
-    //without generate proxy
-    //hubProxy.invoke('SendMessage', messageModels.current_client(), $('#message').val(), type);
-
+    chatProxy.server.SendMessage($('#message').val(), type).fail(function (e) {
+        if (e.source === 'HubException') {
+            console.log(e.message + ' : ' + e.data.user);
+        }
+    });
 
     // Clear text box and reset focus for next comment. 
     $('#message').val('').focus();
